@@ -1,9 +1,12 @@
 import axios from 'axios';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Card from './Card';
 import search from '../assets/search.svg';
 import filterimage from '../assets/filter.png';
 import Filter from './Filter';
+import useCartStore from '../store/cart.store';
+import shallow from 'zustand/shallow';
+import useClickOutside from '../utils/oustideClick';
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -50,6 +53,10 @@ const Products = () => {
   const [products, setProducts] = useState([]);
   const [filter, setFilter] = useState(filterData);
   const [showFilter, setShowFilter] = useState(false);
+  const filterRef = useRef();
+  useClickOutside(filterRef, () => setShowFilter(false));
+
+  const { addToCart } = useCartStore(state => ({ addToCart: state.addToCart }), shallow);
 
   useEffect(() => {
     (async () => {
@@ -78,9 +85,10 @@ const Products = () => {
 
   return (
     products.length > 0 && (
-      <div className="p-10 max-w-screen">
+      <div className="p-10 relative max-w-screen overflow-hidden">
         <div
-          className={`absolute top-20 right-0 z-10 translate-x-[100%] transition ${
+          ref={filterRef}
+          className={`absolute top-4 right-0 z-10 translate-x-[100%] transition ${
             showFilter && 'translate-x-0'
           }  `}
         >
@@ -96,7 +104,7 @@ const Products = () => {
             </button>
           </div>
           <button
-            onClick={() => setShowFilter(!showFilter)}
+            onClick={() => setShowFilter(true)}
             className="border absolute right-0 flex items-center w-20 p-2 gap-2"
             type="button"
           >
@@ -107,7 +115,7 @@ const Products = () => {
         <div className="grid grid-cols-4 justify-between gap-8 mt-5">
           {products.map(product => (
             <div key={product.id}>
-              <Card {...product} />
+              <Card {...product} addToCart={addToCart} />
             </div>
           ))}
         </div>

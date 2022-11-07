@@ -7,13 +7,11 @@ import Cart from './pages/Cart';
 import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <Router>
-      <NavBar />
-      <Routes>
-        <Route path="/" element={<Product />} />
-        <Route path="/cart" element={<Cart />} />
-      </Routes>
-    </Router>
-  </React.StrictMode>,
+  <Router>
+    <NavBar />
+    <Routes>
+      <Route path="/" element={<Product />} />
+      <Route path="/cart" element={<Cart />} />
+    </Routes>
+  </Router>,
 );

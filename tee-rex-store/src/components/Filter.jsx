@@ -6,7 +6,7 @@ const Filter = ({ filter }) => {
         <div key={title}>
           <div className="text-xl font-bold">{title}</div>
           {Object.keys(filter[title]).map(filteritems => (
-            <div key={filteritems}>
+            <div className="relative left-4" key={filteritems}>
               <input type="checkbox" checked={filter[title].filteritems} />
               <span className="pl-4">{filteritems}</span>
             </div>
