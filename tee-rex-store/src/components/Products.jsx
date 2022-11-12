@@ -214,7 +214,7 @@ const Products = () => {
             <img src={filterimage} alt="filter" className="w-5" />
           </button>
         </div>
-        <div className="grid grid-cols-4 justify-between gap-8 mt-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-between gap-8 mt-5">
           {searchedProducts && searchedProducts.length > 0
             ? searchedProducts.map(product => (
                 <div key={product.id}>

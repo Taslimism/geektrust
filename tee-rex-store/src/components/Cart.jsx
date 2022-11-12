@@ -11,16 +11,18 @@ const API_URL = import.meta.env.VITE_API_BASE_URL;
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [cartItemsUpdated, setCartItemsUpdated] = useState(false);
-  const { cartItem, addToCart, removeFromCart, decreaseQuantity, stockOver } = useCartStore(
-    state => ({
-      cartItem: state.cartItem,
-      addToCart: state.addToCart,
-      removeFromCart: state.removeFromCart,
-      decreaseQuantity: state.decreaseQuantity,
-      stockOver: state.stockOver,
-    }),
-    shallow,
-  );
+  const { cartItem, addToCart, removeFromCart, decreaseQuantity, stockOver, totalPrice } =
+    useCartStore(
+      state => ({
+        cartItem: state.cartItem,
+        addToCart: state.addToCart,
+        removeFromCart: state.removeFromCart,
+        decreaseQuantity: state.decreaseQuantity,
+        stockOver: state.stockOver,
+        totalPrice: state.totalPrice,
+      }),
+      shallow,
+    );
 
   useEffect(() => {
     console.log('rerendering cart');
@@ -44,7 +46,26 @@ const Cart = () => {
   }, [cartItemsUpdated]);
 
   return (
-    <div className="flex flex-col pl-10 pt-4 mt-20 gap-4 border w-[80%] mx-auto h-screen bg-white">
+    <>
+      <div className="flex flex-col pl-10 pt-4 mt-20 gap-4 border w-[80%] mx-auto h-screen bg-white">
+        {totalPrice > 0 ? (
+          <>
+            {cartItems &&
+              cartItems.map(data => (
+                <CartItems
+                  {...data}
+                  addToCart={addToCart}
+                  removeFromCart={removeFromCart}
+                  decreaseQuantity={decreaseQuantity}
+                  setCartItemsUpdated={setCartItemsUpdated}
+                />
+              ))}
+            <p>Total Amount : {totalPrice}</p>
+          </>
+        ) : (
+          <p>No items found in cart</p>
+        )}
+      </div>
       {stockOver && (
         <div className="absolute z-50">
           <Modal>
@@ -52,17 +73,7 @@ const Cart = () => {
           </Modal>
         </div>
       )}
-      {cartItems &&
-        cartItems.map(data => (
-          <CartItems
-            {...data}
-            addToCart={addToCart}
-            removeFromCart={removeFromCart}
-            decreaseQuantity={decreaseQuantity}
-            setCartItemsUpdated={setCartItemsUpdated}
-          />
-        ))}
-    </div>
+    </>
   );
 };
 

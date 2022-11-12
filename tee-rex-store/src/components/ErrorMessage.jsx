@@ -8,10 +8,10 @@ const ErrorMessage = () => {
     shallow,
   );
   return (
-    <div className="fixed z-50 top-0 h-[100%] w-screen flex justify-center items-center overflow-y-hidden">
+    <div className="fixed z-50 top-0 h-[100%] w-screen flex justify-center items-center overflow-y-hidden  ">
       <div
         onClick={e => e.stopPropagation()}
-        className="flex z-50 flex-col justify-center items-center bg-white  px-20 py-32 overflow-hidden  rounded-md gap-3"
+        className="flex z-50 flex-col justify-center items-center bg-white  px-20 py-32 overflow-hidden border rounded-md gap-3"
       >
         <img
           onClick={removeErrorPopup}

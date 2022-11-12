@@ -13,18 +13,18 @@ const CartItems = ({
   console.log('rerendering cart items');
   return (
     <div key={id} className="flex gap-8 items-center">
-      <div className=" h-48 w-48 rounded-md p-2">
+      <div className="h-20 w-20 sm:h-48 sm:w-48 rounded-md p-1 sm:p-2">
         <img src={imageURL} alt="placeholder" />
       </div>
-      <div className="font-semibold">
+      <div className="font-semibold text-sm sm:text-base">
         <p>{name}</p>
         <p>Price ${price}</p>
         <p>Total ${price * purchasedQuantity}</p>
       </div>
-      <div className="flex gap-2">
+      <div className="flex sm:flex-row flex-col gap-2">
         <button
           onClick={() => {
-            decreaseQuantity(id);
+            decreaseQuantity(id, price);
             setCartItemsUpdated(currentState => !currentState);
           }}
           type="button"
@@ -36,7 +36,7 @@ const CartItems = ({
         <button
           onClick={() => {
             console.log(id, quantity);
-            addToCart({ id, quantity });
+            addToCart({ id, quantity, price });
             setCartItemsUpdated(currentState => !currentState);
           }}
           type="button"

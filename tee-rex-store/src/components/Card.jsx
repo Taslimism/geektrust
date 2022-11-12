@@ -17,7 +17,7 @@ const Card = ({ name, price, imageURL, addToCart, quantity, id }) => {
         </p>
       </div>
       <button
-        onClick={() => addToCart({ id, quantity })}
+        onClick={() => addToCart({ id, quantity, price })}
         className="w-full text-center p-1 mt-2 bg-teal-900 border-none text-white"
         type="button"
       >
