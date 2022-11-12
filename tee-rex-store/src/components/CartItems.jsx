@@ -1,22 +1,64 @@
-const CartItems = () => (
-  <div>
-    <div>
-      <img src="http://placehold.it/500x300" alt="placeholder" />
+const CartItems = ({
+  imageURL,
+  name,
+  price,
+  purchasedQuantity,
+  id,
+  quantity,
+  addToCart,
+  removeFromCart,
+  decreaseQuantity,
+  setCartItemsUpdated,
+}) => {
+  console.log('rerendering cart items');
+  return (
+    <div key={id} className="flex gap-8 items-center">
+      <div className=" h-48 w-48 rounded-md p-2">
+        <img src={imageURL} alt="placeholder" />
+      </div>
+      <div className="font-semibold">
+        <p>{name}</p>
+        <p>Price ${price}</p>
+        <p>Total ${price * purchasedQuantity}</p>
+      </div>
+      <div className="flex gap-2">
+        <button
+          onClick={() => {
+            decreaseQuantity(id);
+            setCartItemsUpdated(currentState => !currentState);
+          }}
+          type="button"
+          className="bg-blue-500 text-white px-2 rounded-md"
+        >
+          -
+        </button>
+        <span className="border rounded-md px-2">{purchasedQuantity}</span>
+        <button
+          onClick={() => {
+            console.log(id, quantity);
+            addToCart({ id, quantity });
+            setCartItemsUpdated(currentState => !currentState);
+          }}
+          type="button"
+          className="bg-blue-500 text-white px-2 rounded-md"
+        >
+          +
+        </button>
+      </div>
+      <div>
+        <button
+          onClick={() => {
+            removeFromCart(id);
+            setCartItemsUpdated(currentState => !currentState);
+          }}
+          type="button"
+          className="bg-red-600 text-white px-2 rounded-md"
+        >
+          Delete
+        </button>
+      </div>
     </div>
-    <div>
-      <p>Name</p>
-      <p>Price $120</p>
-    </div>
-    <div>
-      <select label="Quantity">
-        <option value={1}>1</option>
-        <option value={2}>2</option>
-      </select>
-    </div>
-    <div>
-      <button type="button">Delete</button>
-    </div>
-  </div>
-);
+  );
+};
 
 export default CartItems;

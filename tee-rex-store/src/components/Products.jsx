@@ -53,23 +53,30 @@ const Products = () => {
   const [products, setProducts] = useState([]);
   const [filter, setFilter] = useState(filterData);
   const [showFilter, setShowFilter] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchedProducts, setSearchedProducts] = useState([]);
+
   const filterRef = useRef();
   useClickOutside(filterRef, () => setShowFilter(false));
+  console.log(filter);
 
   const { addToCart } = useCartStore(state => ({ addToCart: state.addToCart }), shallow);
 
   useEffect(() => {
     (async () => {
       try {
-        const { data } = await axios.get(API_URL);
-        console.log(data);
-        console.log(filterData);
-        setProducts(data);
+        if (!searchTerm) {
+          setSearchedProducts([]);
+          const { data } = await axios.get(API_URL);
+          console.log(data);
+          setProducts(data);
+          handleFilter(data);
+        }
       } catch (e) {
         console.log('Unexpected error occured');
       }
     })();
-  }, []);
+  }, [searchTerm]);
 
   useMemo(() => {
     if (products) {
@@ -83,6 +90,96 @@ const Products = () => {
     }
   }, [products]);
 
+  const handleSearch = () => {
+    if (!searchTerm) return;
+    const search = searchTerm.toLowerCase().trim().split(' ');
+
+    const data = products.filter(product => {
+      for (let i = 0; i < search.length; i++) {
+        const term = search[i];
+        const { color, type } = product;
+        if (term.trim() === color.toLowerCase() || term.trim() === type.toLowerCase()) {
+          return true;
+        }
+      }
+      return false;
+    });
+
+    setSearchedProducts(data);
+  };
+
+  const handleFilter = data => {
+    const filters = [];
+    Object.values(filter).forEach(items => {
+      for (const [key, values] of Object.entries(items)) {
+        if (values) {
+          filters.push(key);
+        }
+      }
+    });
+    if (data && data.length > 0) {
+      const results = [];
+      console.log('filter');
+      filters.forEach(filter => {
+        data.forEach(product => {
+          if (filter.includes(',')) {
+            const [min, max] = key.split(',');
+            if (product.price >= min && product.price <= max) {
+              results.push(product);
+            }
+          } else if (
+            product.gender === filter ||
+            product.color === filter ||
+            product.type === filter
+          ) {
+            results.push(product);
+          }
+        });
+      });
+      setSearchedProducts(results);
+      return;
+    }
+    if (searchedProducts && searchedProducts.length > 0) {
+      const results = [];
+      filters.forEach(filter => {
+        searchedProducts.forEach(product => {
+          if (filter.includes(',')) {
+            const [min, max] = key.split(',');
+            if (product.price >= min && product.price <= max) {
+              results.push(product);
+            }
+          } else if (
+            product.gender === filter ||
+            product.color === filter ||
+            product.type === filter
+          ) {
+            results.push(product);
+          }
+        });
+      });
+      setSearchedProducts(results);
+    } else {
+      const results = [];
+      filters.forEach(filter => {
+        products.forEach(product => {
+          if (filter.includes(',')) {
+            const [min, max] = key.split(',');
+            if (product.price >= min && product.price <= max) {
+              results.push(product);
+            }
+          } else if (
+            product.gender === filter ||
+            product.color === filter ||
+            product.type === filter
+          ) {
+            results.push(product);
+          }
+        });
+      });
+      setSearchedProducts(results);
+    }
+  };
+
   return (
     products.length > 0 && (
       <div className="p-10 relative max-w-screen overflow-hidden">
@@ -92,14 +189,19 @@ const Products = () => {
             showFilter && 'translate-x-0'
           }  `}
         >
-          <Filter filter={filter} setFilter={setFilter} />
+          <Filter filter={filter} setFilter={setFilter} handleFilter={handleFilter} />
         </div>
 
         <div className="grid grid-cols-3 justify-between relative">
           <div className="font-bold text-lg">Products</div>
           <div className="border-slate-500 border relative p-1 flex items-center">
-            <input type="text" className="w-[95%] p-1 focus:outline-none" />
-            <button type="button" className="flex items-center">
+            <input
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              type="text"
+              className="w-[95%] p-1 focus:outline-none"
+            />
+            <button type="button" className="flex items-center" onClick={handleSearch}>
               <img src={search} alt="search" className="w-5 absolute right-2" />
             </button>
           </div>
@@ -113,11 +215,17 @@ const Products = () => {
           </button>
         </div>
         <div className="grid grid-cols-4 justify-between gap-8 mt-5">
-          {products.map(product => (
-            <div key={product.id}>
-              <Card {...product} addToCart={addToCart} />
-            </div>
-          ))}
+          {searchedProducts && searchedProducts.length > 0
+            ? searchedProducts.map(product => (
+                <div key={product.id}>
+                  <Card {...product} addToCart={addToCart} />
+                </div>
+              ))
+            : products.map(product => (
+                <div key={product.id}>
+                  <Card {...product} addToCart={addToCart} />
+                </div>
+              ))}
         </div>
       </div>
     )

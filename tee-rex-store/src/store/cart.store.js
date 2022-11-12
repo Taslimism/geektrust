@@ -5,25 +5,50 @@ const useCartStore = create(
   combine(
     {
       cartItem: {},
+      stockOver: false,
+      totalItems: 0,
     },
+
     set => ({
-      addToCart: product => {
+      addToCart: ({ id, quantity }) => {
         set(state => {
-          if (state.cartItem[product.id] && state.cartItem[product.id].length <= product.quantity)
-            state.cartItem[product.id].push(product);
-          else {
-            state.cartItem[product.id] = [];
-            state.cartItem[product.id].push(product);
+          if (state.cartItem[id]) {
+            if (state.cartItem[id] < quantity) {
+              state.cartItem[id] += 1;
+              state.totalItems += 1;
+            } else state.stockOver = true;
+          } else {
+            state.cartItem[id] = 1;
+            state.totalItems += 1;
           }
 
-          return {};
+          return { ...state };
+        });
+      },
+      decreaseQuantity: id => {
+        set(state => {
+          if (state.cartItem[id] > 0) {
+            state.cartItem[id] -= 1;
+            state.totalItems -= 1;
+          }
+          if (state.cartItem[id] === 0) {
+            state.removeFromCart(id);
+          }
+          console.log(state);
+          return { ...state };
         });
       },
       removeFromCart: id =>
         set(state => {
-          const newCartItems = state.cartItem.filter(item => item.id !== id);
-          state.cartItem = [...newCartItems];
-          return {};
+          console.log('from decreaseQuantity');
+          delete state.cartItem[id];
+          state.totalItems = 0;
+          return { ...state };
+        }),
+      removeErrorPopup: () =>
+        set(state => {
+          state.stockOver = false;
+          return { ...state };
         }),
     }),
   ),
