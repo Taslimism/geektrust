@@ -1,5 +1,4 @@
 const Filter = ({ filter, handleFilter, setFilter }) => {
-  console.log(filter);
   return (
     <div className="bg-white pr-20 pl-10 h-screen">
       {Object.keys(filter).map(title => (

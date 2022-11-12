@@ -10,7 +10,6 @@ const CartItems = ({
   decreaseQuantity,
   setCartItemsUpdated,
 }) => {
-  console.log('rerendering cart items');
   return (
     <div key={id} className="flex gap-8 items-center">
       <div className="h-20 w-20 sm:h-48 sm:w-48 rounded-md p-1 sm:p-2">

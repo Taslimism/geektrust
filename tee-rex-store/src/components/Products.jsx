@@ -58,7 +58,6 @@ const Products = () => {
 
   const filterRef = useRef();
   useClickOutside(filterRef, () => setShowFilter(false));
-  console.log(filter);
 
   const { addToCart } = useCartStore(state => ({ addToCart: state.addToCart }), shallow);
 
@@ -68,7 +67,7 @@ const Products = () => {
         if (!searchTerm) {
           setSearchedProducts([]);
           const { data } = await axios.get(API_URL);
-          console.log(data);
+
           setProducts(data);
           handleFilter(data);
         }
@@ -119,7 +118,7 @@ const Products = () => {
     });
     if (data && data.length > 0) {
       const results = [];
-      console.log('filter');
+
       filters.forEach(filter => {
         data.forEach(product => {
           if (filter.includes(',')) {

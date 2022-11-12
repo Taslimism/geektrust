@@ -38,13 +38,13 @@ const useCartStore = create(
           if (state.cartItem[id] === 0) {
             state.removeFromCart(id);
           }
-          console.log(state);
+          
           return { ...state };
         });
       },
       removeFromCart: id =>
         set(state => {
-          console.log('from decreaseQuantity');
+         
           delete state.cartItem[id];
           state.totalItems = 0;
           state.totalPrice = 0;

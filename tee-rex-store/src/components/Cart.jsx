@@ -25,7 +25,6 @@ const Cart = () => {
     );
 
   useEffect(() => {
-    console.log('rerendering cart');
     (async () => {
       try {
         const { data } = await axios.get(API_URL);
