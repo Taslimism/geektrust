@@ -36,17 +36,25 @@ const useCartStore = create(
             state.totalPrice -= price;
           }
           if (state.cartItem[id] === 0) {
-            state.removeFromCart(id);
+            state.removeFromCart(id, price, 1);
           }
 
           return { ...state };
         });
       },
-      removeFromCart: id =>
+      removeFromCart: (id, price, quantity) =>
         set(state => {
-          delete state.cartItem[id];
-          state.totalItems = 0;
-          state.totalPrice = 0;
+          const { cartItem } = state;
+          delete cartItem[id];
+          state.cartItem = cartItem;
+          if (Object.keys(state.cartItem).length === 0) {
+            state.totalPrice = 0;
+            state.totalItems = 0;
+          } else {
+            state.totalPrice -= price * quantity;
+            state.totalItems -= quantity;
+          }
+
           return { ...state };
         }),
       removeErrorPopup: () =>

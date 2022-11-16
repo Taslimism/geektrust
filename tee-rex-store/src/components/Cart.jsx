@@ -51,13 +51,15 @@ const Cart = () => {
           <>
             {cartItems &&
               cartItems.map(data => (
-                <CartItems
-                  {...data}
-                  addToCart={addToCart}
-                  removeFromCart={removeFromCart}
-                  decreaseQuantity={decreaseQuantity}
-                  setCartItemsUpdated={setCartItemsUpdated}
-                />
+                <div key={data.id}>
+                  <CartItems
+                    {...data}
+                    addToCart={addToCart}
+                    removeFromCart={removeFromCart}
+                    decreaseQuantity={decreaseQuantity}
+                    setCartItemsUpdated={setCartItemsUpdated}
+                  />
+                </div>
               ))}
             <p>Total Amount : {totalPrice}</p>
           </>

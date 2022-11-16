@@ -34,7 +34,6 @@ const CartItems = ({
         <span className="border rounded-md px-2">{purchasedQuantity}</span>
         <button
           onClick={() => {
-            console.log(id, quantity);
             addToCart({ id, quantity, price });
             setCartItemsUpdated(currentState => !currentState);
           }}
@@ -47,7 +46,7 @@ const CartItems = ({
       <div>
         <button
           onClick={() => {
-            removeFromCart(id);
+            removeFromCart(id, purchasedQuantity, price);
             setCartItemsUpdated(currentState => !currentState);
           }}
           type="button"

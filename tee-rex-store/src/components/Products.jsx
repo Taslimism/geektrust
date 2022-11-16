@@ -117,7 +117,6 @@ const Products = () => {
           }
         }
       });
-    console.log(filters);
 
     if (searchTermActive) {
       const results = [];
