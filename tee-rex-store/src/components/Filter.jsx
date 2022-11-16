@@ -8,15 +8,19 @@ const Filter = ({ filter, handleFilter, setFilter }) => {
             return (
               <div className="relative left-4" key={filteritems}>
                 <input
-                  onChange={() =>
-                    setFilter(prevFilter => ({
-                      ...prevFilter,
-                      [title]: {
-                        ...prevFilter[title],
-                        [filteritems]: !prevFilter[title][filteritems],
-                      },
-                    }))
-                  }
+                  onChange={() => {
+                    setFilter(prevFilter => {
+                      const newFilter = {
+                        ...prevFilter,
+                        [title]: {
+                          ...prevFilter[title],
+                          [filteritems]: !prevFilter[title][filteritems],
+                        },
+                      };
+                      handleFilter(newFilter, false);
+                      return newFilter;
+                    });
+                  }}
                   type="checkbox"
                   checked={filter[title][filteritems]}
                 />
@@ -26,13 +30,6 @@ const Filter = ({ filter, handleFilter, setFilter }) => {
           })}
         </div>
       ))}
-      <button
-        onClick={handleFilter}
-        type="button"
-        className="bg-blue-700 text-white w-full px-2 py-1 mt-4 rounded-xl"
-      >
-        Apply Filter
-      </button>
     </div>
   );
 };

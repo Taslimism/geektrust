@@ -69,7 +69,7 @@ const Products = () => {
           const { data } = await axios.get(API_URL);
 
           setProducts(data);
-          handleFilter(data);
+          handleFilter(data, true);
         }
       } catch (e) {
         console.log('Unexpected error occured');
@@ -89,7 +89,7 @@ const Products = () => {
     }
   }, [products]);
 
-  const handleSearch = () => {
+  const handleSearch = searchTerm => {
     if (!searchTerm) return;
     const search = searchTerm.toLowerCase().trim().split(' ');
 
@@ -107,16 +107,19 @@ const Products = () => {
     setSearchedProducts(data);
   };
 
-  const handleFilter = data => {
+  const handleFilter = (data, searchTermActive) => {
     const filters = [];
-    Object.values(filter).forEach(items => {
-      for (const [key, values] of Object.entries(items)) {
-        if (values) {
-          filters.push(key);
+    !searchTermActive &&
+      Object.values(data).forEach(items => {
+        for (const [key, values] of Object.entries(items)) {
+          if (values) {
+            filters.push(key);
+          }
         }
-      }
-    });
-    if (data && data.length > 0) {
+      });
+    console.log(filters);
+
+    if (searchTermActive) {
       const results = [];
 
       filters.forEach(filter => {
@@ -139,7 +142,7 @@ const Products = () => {
       return;
     }
     if (searchedProducts && searchedProducts.length > 0) {
-      const results = [];
+      const results = filters.length > 0 ? [...searchedProducts] : [];
       filters.forEach(filter => {
         searchedProducts.forEach(product => {
           if (filter.includes(',')) {
@@ -158,7 +161,7 @@ const Products = () => {
       });
       setSearchedProducts(results);
     } else {
-      const results = [];
+      const results = filters.length > 0 ? [...searchedProducts] : [];
       filters.forEach(filter => {
         products.forEach(product => {
           if (filter.includes(',')) {
@@ -196,11 +199,14 @@ const Products = () => {
           <div className="border-slate-500 border relative p-1 flex items-center">
             <input
               value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
+              onChange={e => {
+                setSearchTerm(e.target.value);
+                handleSearch(e.target.value);
+              }}
               type="text"
               className="w-[95%] p-1 focus:outline-none"
             />
-            <button type="button" className="flex items-center" onClick={handleSearch}>
+            <button type="button" className="flex items-center">
               <img src={search} alt="search" className="w-5 absolute right-2" />
             </button>
           </div>
